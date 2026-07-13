@@ -38,6 +38,9 @@ dependencies:
   provider: ^6.1.2
   permission_handler: ^11.3.1
   image: ^4.1.7
+  file_picker: 10.3.10
+  path: ^1.9.1
+  sqflite_common_ffi: ^2.4.2
 
 dev_dependencies:
   flutter_test:

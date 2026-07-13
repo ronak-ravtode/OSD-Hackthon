@@ -1,0 +1,76 @@
+// lib/data/services/ocr_service.dart
+
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+
+class OcrService {
+  static const int _maxLongSide = 1024;
+
+  Future<String> extractText(String filePath) async {
+    // ML Kit is Android/iOS only. On desktop and Web, return a stub.
+    if (kIsWeb) {
+      return '[Web demo] ${p.basename(filePath)} — OCR not supported on Web';
+    }
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return '[Windows demo] ${p.basename(filePath)} — OCR not supported on desktop';
+    }
+
+    final TextRecognizer recognizer = TextRecognizer();
+    try {
+      final String resizedPath = await _resizeImage(filePath);
+      final InputImage inputImage =
+          InputImage.fromFilePath(resizedPath);
+      final RecognizedText recognizedText =
+          await recognizer.processImage(inputImage);
+      return recognizedText.text;
+    } on FileSystemException catch (e) {
+      throw Exception('File error during OCR: ${e.message}');
+    } on Exception catch (e) {
+      throw Exception('OCR failed: ${e.toString()}');
+    } finally {
+      await recognizer.close();
+    }
+  }
+
+  Future<String> _resizeImage(String sourcePath) async {
+    if (kIsWeb) {
+      throw UnsupportedError('Filesystem operations not supported on web.');
+    }
+    final File source = File(sourcePath);
+    final Uint8List bytes = await source.readAsBytes();
+    final img.Image? original = img.decodeImage(bytes);
+    if (original == null) {
+      throw Exception('Could not decode image at $sourcePath');
+    }
+
+    final img.Image resized = _scaleToMax(original, _maxLongSide);
+
+    final Directory tmp = await getTemporaryDirectory();
+    final String outPath = p.join(
+      tmp.path,
+      'ocr_resized_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    );
+    final File outFile = File(outPath);
+    await outFile.writeAsBytes(img.encodeJpg(resized));
+    return outPath;
+  }
+
+  img.Image _scaleToMax(img.Image src, int maxSide) {
+    final int w = src.width;
+    final int h = src.height;
+    final int longest = w > h ? w : h;
+    if (longest <= maxSide) return src;
+    final double scale = maxSide / longest;
+    return img.copyResize(
+      src,
+      width: (w * scale).round(),
+      height: (h * scale).round(),
+    );
+  }
+}
