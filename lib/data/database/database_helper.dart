@@ -12,7 +12,7 @@ import '../../domain/models/screenshot_model.dart';
 import '../../domain/models/album_model.dart';
 
 class DatabaseHelper {
-  static const String _dbName = 'snap_search_v2.db';
+  static const String _dbName = 'trace_v1.db';
   static const int _dbVersion = 1;
   static const String _tableName = 'screenshots';
 
@@ -72,7 +72,8 @@ class DatabaseHelper {
         filePath,
         extractedText,
         category,
-        timestamp
+        timestamp,
+        isCompressed
       )
     ''');
   }
