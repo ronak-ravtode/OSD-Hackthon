@@ -46,13 +46,13 @@ flutter run --release
 # Generate a fresh testing release APK
 flutter build apk --release
 ```
-The compiled APK will be generated at: `build/app/outputs/flutter-apk/app-release.apk` (and is copied to [release/snap_search.apk](release/snap_search.apk)).
+The compiled APK will be generated at: `build/app/outputs/flutter-apk/app-release.apk` (and is copied to [release/trace.apk](release/trace.apk)).
 
 ---
 
 ## 📥 Direct APK Download
 Try the app directly on your physical Android phone:
-👉 **[Download Trace Release APK](release/snap_search.apk)**
+👉 **[Download Trace Release APK](release/trace.apk)**
 
 ---
 
