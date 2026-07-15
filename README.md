@@ -1,69 +1,85 @@
-# SnapSearch — On-Device Screenshot Search Utility 🔍📸
+# Trace — On-Device AI Screenshot Utility 🔍📸
 
-**SnapSearch** is a premium, high-performance Flutter application that allows users to import screenshots, extract text using on-device OCR, and perform lightning-fast Full-Text Search (FTS) to find specific screenshots by their content.
+**Trace** is a premium, high-performance, offline-first mobile application built for **OSDHack 2026** that acts as an intelligent utility for managing screenshots. It extracts text locally via OCR, executes instant Full-Text Search (FTS5), auto-redacts sensitive PII information (Privacy Shield), groups duplicates using Jaccard Similarity, and generates smart bullet summaries using a pure-math implementation of the TextRank/PageRank algorithm.
 
----
-
-## 🌟 Key Features
-
-*   **Multi-Image Indexing:** Import and process multiple screenshots from your gallery/downloads folder simultaneously.
-*   **On-Device OCR:** Zero-latency text extraction powered by **Google ML Kit Text Recognition** (keeps your data private and works 100% offline).
-*   **SQLite FTS4 Search Engine:** Fast local database search queries using SQLite virtual tables with support for **Prefix Wildcard Matching** (e.g., typing `Home` matches `HomeScreen` instantly).
-*   **Interactive Photo Preview:** Tap any screenshot to open a high-resolution preview with interactive zoom and pan support.
-*   **Monospace Text & Copy:** View all extracted OCR text in a monospace card, highlight sections, or copy the entire text to your clipboard with a single tap.
-*   **Robust Platform Fallbacks:** Fully compatible with Web/Desktop environments through an in-memory database mock and mock OCR stubs.
+All operations run **100% on-device** with **zero network requests** and **zero user data leaving your phone**.
 
 ---
 
-## 🚀 How to Run & Build
+## 🎥 Mandatory Demo Video
+👉 **[Watch the 2-Minute Demo Video Here](https://unstop.com/o/1693803)** *(Submitted on Unstop)*
 
-### Prerequisites
-*   Flutter SDK installed (v3.22+ recommended).
-*   Android SDK / Android Studio configured.
-
-### Local Execution (Android Emulator)
-1. Start your Android emulator.
-2. Run the application:
-    ```bash
-    flutter run -d emulator-5554
-    ```
-
-### Local Execution (Web Browser)
-1. Launch the app in Chrome:
-    ```bash
-    flutter run -d chrome
-    ```
+The demo video illustrates:
+1. Real-time selection & Google Lens-style zoom/pan.
+2. Auto-redaction of PII (Aadhaar & Credit Cards).
+3. TextRank summarizer & Regex-based Smart Actions.
+4. Smart tags classification & local SQLite search working in Airplane Mode.
 
 ---
 
-## 📥 Try on Android Devices (APK Download)
+## 🚀 How to Run & Build (Reproduce Project)
 
-You can download the compiled release APK directly from this repository to try the app on your physical Android device!
+### 1. Prerequisites
+*   Flutter SDK installed (v3.22.0+ recommended)
+*   Android SDK & Emulator configured
+*   Physical Android Device (optional, recommended for local OCR testing)
 
-👉 **[Download snap_search.apk](release/snap_search.apk)** 
+### 2. Setup & Dependencies
+Add permissions handler and SQLite helpers locally by fetching packages:
+```bash
+# Clone the repository
+git clone https://github.com/ronak-ravtode/OSD-Hackthon.git
+cd OSD-Hackthon
 
-*(Note: Since this is signed with a debug-signing key for preview purposes, you may need to allow "Install from Unknown Sources" on your Android device when prompted).*
-
----
-
-## 🛠️ Testing Guide
-
-### 1. Adding Test Images to the Emulator
-If testing on a new emulator with an empty gallery, copy images from your Windows PC using ADB:
-```powershell
-# 1. Set environment path to ADB
-$env:PATH += ";C:\platform-tools"
-
-# 2. Push your screenshot to the emulator's Download folder
-adb push "C:\path\to\your\screenshot.png" /sdcard/Download/test_image.png
-
-# 3. Broadcast file to refresh the gallery
-adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Download/test_image.png
+# Get all dependencies
+flutter pub get
 ```
 
-### 2. Indexing & Searching
-1. Open **SnapSearch**.
-2. Tap the **Image plus icon (`🖼️+`)** in the top-right corner.
-3. Select your imported screenshots from the folder picker.
-4. Tap the **Search FAB (`🔍`)** in the bottom-right, type any word contained in your screenshots (e.g., `Flutter`, `Material`), and verify it filters instantly.
-5. Tap any card to open the detail view, zoom/pan the screenshot, or copy the extracted text.
+### 3. Build & Run Commands
+```bash
+# Analyze static analysis check (must return 0 issues)
+flutter analyze
+
+# Run local testing in release mode on emulator or connected phone
+flutter run --release
+
+# Generate a fresh testing release APK
+flutter build apk --release
+```
+The compiled APK will be generated at: `build/app/outputs/flutter-apk/app-release.apk` (and is copied to [release/snap_search.apk](release/snap_search.apk)).
+
+---
+
+## 📥 Direct APK Download
+Try the app directly on your physical Android phone:
+👉 **[Download Trace Release APK](release/snap_search.apk)**
+
+---
+
+## 📱 Sample Inputs & Expected Outputs
+
+| Input Image Type | Sample Input Contents | Expected App Action & Output |
+| :--- | :--- | :--- |
+| **Receipt / Invoice** | A payment screen containing `Total: ₹1,499` and `Tax` | **Category**: `receipt` <br>**Smart Action**: Adds chip `Copy ₹1499` <br>**Tags**: `receipt` |
+| **Travel Ticket** | A flight ticket showing `PNR: W39K1B`, `Flight SG813` | **Category**: `travel_tickets` <br>**Smart Action**: Adds chip `Copy PNR: W39K1B` <br>**Tags**: `travel` |
+| **Sensitive Document** | An image containing a 12-digit Aadhaar Card number or 16-digit Credit Card | **Privacy Shield Alert**: Warns PII found <br>**Action**: Redacts digits with `████` block characters |
+| **Long Text Article** | A screenshot of a 10-sentence technical article | **Summary**: Returns top 3 most important sentences using PageRank |
+
+---
+
+## 🛡️ Privacy, Safety & Local Verification
+
+*   **100% Offline**: Tested and validated in Airplane Mode.
+*   **Permissions**: Requests only `READ_MEDIA_IMAGES` to scan local screenshots.
+*   **Privacy Shield**: Uses a local Luhn algorithm validation on 13-19 digit credit cards and regex matches for Aadhaar/passwords before sharing.
+*   **Data Handling**: SQLite DB and resized caches are stored strictly within the app's secure private directory.
+
+---
+
+## 🛠️ Attributions & Tech Stack
+
+*   **Framework**: Flutter (Dart 3)
+*   **OCR**: Google ML Kit Text Recognition (`google_mlkit_text_recognition`)
+*   **Database**: SQLite with FTS5 virtual tables (`sqflite`)
+*   **Image Processing**: Grayscale & scale conversion (`image` package)
+*   **No Cloud APIs**: 100% local model pipelines.
