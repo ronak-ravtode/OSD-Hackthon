@@ -7,7 +7,7 @@ All operations run **100% on-device** with **zero network requests** and **zero 
 ---
 
 ## 🎥 Mandatory Demo Video
-👉 **[Watch the 2-Minute Demo Video Here](https://www.youtube.com/watch?v=nsloszLhvIg&t=209s)**
+👉 **[Watch the 2-Minute Demo Video Here](https://youtu.be/uxNUnxf1oLM)**
 
 The demo video illustrates:
 1. Real-time selection & Google Lens-style zoom/pan.
