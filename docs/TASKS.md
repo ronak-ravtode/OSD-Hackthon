@@ -11,34 +11,45 @@
 ## Phase 1: Foundation & Setup (Do Together)
 - [x] Initialize Flutter project and configure strict linting (`AGENTS.md`, `analysis_options.yaml`).
 - [x] Create `docs/` folder and define `ARCHITECTURE.md` and `DATA_CONTRACTS.md`.
-- [ ] **Teammate 1 (Data):** Create `Screenshot` model and `IScreenshotRepository` interface in `lib/domain/`.
-- [ ] **Teammate 2 (UI):** Setup `Provider` boilerplate, basic `MaterialApp` routing, and AppTheme in `lib/presentation/`.
+- [x] **Teammate 1 (Data):** Create `Screenshot` model and `IScreenshotRepository` interface in `lib/domain/`.
+- [x] **Teammate 2 (UI):** Setup `Provider` boilerplate, basic `MaterialApp` routing, and AppTheme in `lib/presentation/`.
 
 ## Phase 2: Mock Implementation (Parallel Execution)
 *Goal: Get the UI running with fake data so Teammate 2 is not blocked by Teammate 1.*
 
-- [ ] **Teammate 1 (Data):** Create `MockScreenshotRepository` in `lib/data/` returning 5 hardcoded dummy screenshots.
-- [ ] **Teammate 2 (UI):** Build `DashboardScreen` (ListView of screenshots) and `DetailScreen` using the Mock Repository.
-- [ ] **Teammate 2 (UI):** Wire up `ScreenshotProvider` to inject the Mock Repository.
+- [x] **Teammate 1 (Data):** Create `MockScreenshotRepository` in `lib/data/` returning 5 hardcoded dummy screenshots.
+- [x] **Teammate 2 (UI):** Build `DashboardScreen` (ListView of screenshots) and `DetailScreen` using the Mock Repository.
+- [x] **Teammate 2 (UI):** Wire up `ScreenshotProvider` to inject the Mock Repository.
 
 ## Phase 3: Real Data Layer (Teammate 1 Only)
 *Goal: Replace mocks with real offline-first logic.*
 
-- [ ] **Teammate 1 (Data):** Implement `DatabaseHelper` with SQLite and FTS5 setup for full-text search.
-- [ ] **Teammate 1 (Data):** Implement `LocalScreenshotRepository` to replace the Mock.
-- [ ] **Teammate 1 (Data):** Implement `OcrService` using ML Kit (resize image -> extract text).
-- [ ] **Teammate 1 (Data):** Implement basic keyword-based categorization (e.g., if text contains "₹" or "$", category = 'receipt').
+- [x] **Teammate 1 (Data):** Implement `DatabaseHelper` with SQLite and FTS5 setup for full-text search.
+- [x] **Teammate 1 (Data):** Implement `LocalScreenshotRepository` to replace the Mock.
+- [x] **Teammate 1 (Data):** Implement `OcrService` using ML Kit (resize image -> extract text).
+- [x] **Teammate 1 (Data):** Implement basic keyword-based categorization (e.g., if text contains "₹" or "$", category = 'receipt').
 
 ## Phase 4: UI Integration & Features (Teammate 2 Only)
 *Goal: Connect the real data layer to the UI and add core features.*
 
-- [ ] **Teammate 2 (UI):** Build `SearchScreen` with a search bar and category filter chips.
-- [ ] **Teammate 2 (UI):** Connect `SearchScreen` to `IScreenshotRepository.searchScreenshots()`.
-- [ ] **Teammate 2 (UI):** Implement permission handling (Photo gallery access) on app launch using `permission_handler`.
-- [ ] **Teammate 2 (UI):** Add a background indexing trigger (e.g., a button "Scan New Screenshots") and loading states.
+- [x] **Teammate 2 (UI):** Build `SearchScreen` with a search bar and category filter chips.
+- [x] **Teammate 2 (UI):** Connect `SearchScreen` to `IScreenshotRepository.searchScreenshots()`.
+- [x] **Teammate 2 (UI):** Implement permission handling (Photo gallery access) on app launch using `permission_handler`.
+- [x] **Teammate 2 (UI):** Add a background indexing trigger (e.g., a button "Scan New Screenshots") and loading states.
 
-## Phase 5: Polish, Testing & Demo Prep
-- [ ] **Both:** Run `flutter analyze` and fix ALL errors and warnings.
+## Phase 5: Advanced Features
+- [x] TextRank Summarization (`lib/core/utils/summarizer.dart`)
+- [x] Live Text Overlay — Tap-to-Copy (`lib/presentation/widgets/text_highlight_overlay.dart`)
+- [x] Smart Tags — Multi-tag categorization (`lib/core/utils/smart_tagger.dart`)
+- [x] Duplicate Detection — Jaccard similarity (`lib/core/utils/duplicate_detector.dart`)
+- [x] Collections & Smart Folders (`lib/presentation/widgets/collections_tab_widget.dart`)
+- [x] Background Auto-Indexing — manual scan (`lib/data/services/background_indexer.dart`)
+- [x] One-Tap Smart Actions (`lib/core/utils/action_extractor.dart`)
+- [x] Privacy Shield / Auto-Redaction (`lib/core/utils/redaction_engine.dart`)
+- [x] Storage Saver Mode (`lib/domain/models/screenshot_model.dart` — isCompressed field)
+
+## Phase 6: Polish, Testing & Demo Prep
+- [x] **Both:** Run `flutter analyze` and fix ALL errors and warnings.
 - [ ] **Both:** Test offline functionality (Turn on Airplane mode and verify search works).
 - [ ] **Teammate 1 (Data):** Optimize image resizing to prevent Out-Of-Memory crashes on low-end devices.
 - [ ] **Teammate 2 (UI):** Polish UI (add empty states, error snackbars, and smooth transitions).

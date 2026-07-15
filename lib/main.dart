@@ -29,10 +29,23 @@ class SnapSearchApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'SnapSearch',
+        title: 'Trace',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6750A4),
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: Colors.black,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.black,
+            elevation: 0,
+            iconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          colorScheme: const ColorScheme.dark(
+            primary: Color(0xFF4285F4),
+            secondary: Colors.white,
           ),
           useMaterial3: true,
         ),
